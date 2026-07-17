@@ -18,6 +18,7 @@ function getSiteConfig() {
 const OUT = join(ROOT, "out");
 const SRC = join(ROOT, "src");
 const { url: SITE_URL, domain: SITE_DOMAIN } = getSiteConfig();
+const isPreviewBuild = process.env.NEXT_PUBLIC_SITE_MODE === "preview";
 const errors = [];
 const warnings = [];
 
@@ -50,7 +51,8 @@ if (!existsSync(OUT)) {
   const htmlFiles = walkHtml(OUT);
   if (!htmlFiles.length) errors.push("No HTML files in out/");
 
-  // 2. noindex on important pages
+  // 2. noindex on important pages (skip when preview build — all pages are noindex)
+  if (!isPreviewBuild) {
   const indexableMustNotHaveNoindex = htmlFiles.filter(
     (f) =>
       !f.includes("/privacy/") &&
@@ -63,6 +65,7 @@ if (!existsSync(OUT)) {
     if (/noindex/i.test(html) && !f.includes("404") && !f.includes("_not-found")) {
       errors.push(`Unexpected noindex: ${f.replace(OUT, "")}`);
     }
+  }
   }
 
   // privacy/terms should be noindex
@@ -115,7 +118,6 @@ if (!existsSync(OUT)) {
 
 // 6. robots.txt
 const robots = join(OUT, "robots.txt");
-const isPreviewBuild = process.env.NEXT_PUBLIC_SITE_MODE === "preview";
 if (existsSync(robots)) {
   const text = readFileSync(robots, "utf8");
   if (isPreviewBuild) {
