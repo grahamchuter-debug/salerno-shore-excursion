@@ -58,8 +58,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             className="bg-maple-600 px-4 py-2 text-center text-sm font-semibold text-white"
             role="status"
           >
-            Preview environment (workers.dev) — noindex · no live payment · enquiry in test mode
-            only · canonical points to {SITE.domain}
+            Preview environment (workers.dev) — noindex · SEO demand-validation stage · no
+            booking · no enquiry collection · canonical points to {SITE.domain}
           </div>
         ) : null}
         <JsonLd data={[organizationSchema(), websiteSchema(), travelAgencySchema()]} />

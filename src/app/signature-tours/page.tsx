@@ -5,13 +5,15 @@ import { JsonLd } from "@/components/JsonLd";
 import { SignatureTourBadge } from "@/components/SignatureTourBadge";
 import { ResponsiveImage } from "@/components/ResponsiveImage";
 import { breadcrumbSchema, itemListSchema } from "@/lib/schema";
-import { getGuideImage } from "@/lib/images";
+import { getSignatureImage } from "@/lib/images";
 import {
   SIGNATURE_TOURS_PATH,
   signatureTourEditorial,
   signatureTours,
   getSignatureTourCta,
+  signatureTourDisclosures,
 } from "@/data/signature-tours";
+import { BookingComingLaterNotice } from "@/components/BookingComingLaterNotice";
 
 export const metadata = buildMetadata({
   title: "Salerno Signature Tours — Pompeii, Vesuvius & Amalfi Coast",
@@ -55,13 +57,18 @@ export default function SignatureToursPage() {
           <p className="mt-4 max-w-3xl text-sm leading-relaxed text-volcanic-600">
             {signatureTourEditorial.honestyPrinciple}
           </p>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-volcanic-600">
+            {signatureTourEditorial.stageNote} {signatureTourDisclosures.supporting}
+          </p>
+          <div className="mt-4 max-w-md">
+            <BookingComingLaterNotice />
+          </div>
         </div>
       </section>
 
       <section className="section-padding pt-0">
         <div className="container-wide grid gap-8">
           {signatureTours.map((tour) => {
-            const imageKey = tour.slug.includes("vesuvius") ? "greek-theatre" : "coast";
             const cta = getSignatureTourCta(tour);
             return (
               <Link
@@ -72,7 +79,7 @@ export default function SignatureToursPage() {
                 <div className="grid gap-0 md:grid-cols-2">
                   <div className="relative min-h-[220px]">
                     <ResponsiveImage
-                      image={getGuideImage(imageKey)}
+                      image={getSignatureImage(tour.slug)}
                       role="card"
                       className="absolute inset-0 block h-full w-full"
                       imgClassName="absolute inset-0 h-full w-full object-cover"
@@ -88,12 +95,12 @@ export default function SignatureToursPage() {
                     <dl className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
                       {tour.duration ? (
                         <div>
-                          <dt className="font-semibold text-volcanic-900">Duration</dt>
+                          <dt className="font-semibold text-volcanic-900">Suggested duration</dt>
                           <dd className="text-volcanic-700">{tour.duration}</dd>
                         </div>
                       ) : null}
                       <div>
-                        <dt className="font-semibold text-volcanic-900">Capacity</dt>
+                        <dt className="font-semibold text-volcanic-900">Format</dt>
                         <dd className="text-volcanic-700">Maximum {tour.maxGuests} guests</dd>
                       </div>
                     </dl>

@@ -1,9 +1,14 @@
 /**
- * Signature Tour capacity, departure status and vehicle allocation.
- * Customer-facing UI must not expose minimum-six messaging or fake seat counts
- * until terms and fallback arrangements are approved.
+ * Signature Tour capacity architecture.
+ *
+ * Public stage: SEO / demand validation — do not display availability statuses,
+ * remaining seats, vehicle counts beyond “maximum eight guests”, or break-even maths.
+ *
+ * Initial commercial planning: one eight-seat vehicle.
+ * Architecturally support up to 3 vehicles later — keep 2 and 3 disabled.
  */
 
+/** Booking-phase statuses — NOT for public UI until live inventory exists. */
 export type DepartureStatus =
   | "interest-registered"
   | "awaiting-minimum-numbers"
@@ -13,87 +18,72 @@ export type DepartureStatus =
   | "sold-out"
   | "private-vehicle-available";
 
-export const DEPARTURE_STATUS_LABELS: Record<DepartureStatus, string> = {
-  "interest-registered": "Interest registered",
-  "awaiting-minimum-numbers": "Awaiting minimum numbers",
-  "departure-likely": "Departure likely",
-  "departure-confirmed": "Departure confirmed",
-  "limited-availability": "Limited availability",
-  "sold-out": "Sold out",
-  "private-vehicle-available": "Private vehicle available",
-};
-
 export interface VehicleSlot {
   index: 1 | 2 | 3;
   enabled: boolean;
   maxGuests: 8;
-  /** Only activate after Papillon confirms for the specific sailing */
   activationNote: string;
 }
 
 export interface CapacityConfig {
-  /** Initial commercial configuration — not a public promise until approved */
-  minimumConfirmedDeparture: 6;
   maxGuestsPerVehicle: 8;
-  maxVehiclesPerSailing: 3;
-  maxGuestsTotal: 24;
-  /** Public launch: advertise at most one vehicle / eight guests */
+  maxVehiclesSupported: 3;
+  maxGuestsTotalIfFullyActivated: 24;
+  /** Public copy may mention maximum eight guests only */
   publicMaxGuestsAdvertised: 8;
-  publicMinGuestsAdvertised: null;
   vehicles: VehicleSlot[];
-  /** Never invent remaining seats */
   remainingSeatsPublic: null;
-  showMinimumSixPublicly: false;
+  /** Do not show departure / scarcity statuses on public pages */
+  publicAvailabilityStatusesEnabled: false;
 }
 
 export const capacityConfig: CapacityConfig = {
-  minimumConfirmedDeparture: 6,
   maxGuestsPerVehicle: 8,
-  maxVehiclesPerSailing: 3,
-  maxGuestsTotal: 24,
+  maxVehiclesSupported: 3,
+  maxGuestsTotalIfFullyActivated: 24,
   publicMaxGuestsAdvertised: 8,
-  publicMinGuestsAdvertised: null,
   vehicles: [
     {
       index: 1,
       enabled: true,
       maxGuests: 8,
-      activationNote: "Initial operational setting — one vehicle, maximum eight guests.",
+      activationNote: "Initial planning assumes one eight-seat vehicle.",
     },
     {
       index: 2,
       enabled: false,
       maxGuests: 8,
-      activationNote: "Disabled until Papillon confirms availability for the sailing.",
+      activationNote: "Activate only when demand and Papillon availability justify it.",
     },
     {
       index: 3,
       enabled: false,
       maxGuests: 8,
-      activationNote: "Disabled until Papillon confirms availability for the sailing.",
+      activationNote: "Activate only when demand and Papillon availability justify it.",
     },
   ],
   remainingSeatsPublic: null,
-  showMinimumSixPublicly: false,
+  publicAvailabilityStatusesEnabled: false,
 };
 
 export type TourFormat = "shared-small-group" | "private-vehicle";
 
+/** Editorial descriptions — no operating / bookable claims. */
 export const tourFormatCopy = {
   shared: {
     id: "shared-small-group" as TourFormat,
-    label: "Shared small-group Signature Tour",
+    label: "Shared small-group tour",
     badge: "Maximum 8 guests",
-    positioning: "Primary website recommendation",
+    positioning: "Primary concept",
     summary:
-      "Join a carefully selected small-group day in an eight-seat vehicle. Shared departures are arranged when operationally confirmed for your sailing — we do not claim fixed daily schedules until supply is live.",
+      "Our selected small-group itinerary, designed around a maximum eight-seat touring experience. Individual seat sales and scheduled shared departures are not announced until approved.",
   },
   private: {
     id: "private-vehicle" as TourFormat,
-    label: "Private vehicle for your party",
-    badge: "Price on request",
-    positioning: "Secondary option",
+    label: "Private eight-seat vehicle",
+    badge: "Concept option",
+    positioning: "Secondary concept",
     summary:
-      "Travel only with your own party in a dedicated vehicle. Private enquiries are welcome; private pricing is confirmed case by case and is not published as a fixed rate.",
+      "A private eight-seat vehicle for your own party is part of the content model for later activation. Private pricing and booking are not available on this site yet.",
   },
 } as const;

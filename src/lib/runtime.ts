@@ -1,25 +1,27 @@
+import { SITE } from "@/lib/site";
+
 /**
- * Runtime / site mode flags for production vs workers.dev preview builds.
- * Preview builds must remain noindex and must not use workers.dev as canonical.
+ * Runtime flags.
+ * Site stage: SEO and demand validation — not an active booking launch.
  */
 
 export type SiteMode = "production" | "preview";
 
-/** Set NEXT_PUBLIC_SITE_MODE=preview for workers.dev preview builds. */
 export const SITE_MODE: SiteMode =
   process.env.NEXT_PUBLIC_SITE_MODE === "preview" ? "preview" : "production";
 
 export const IS_PREVIEW = SITE_MODE === "preview";
 
-/**
- * Enquiry submissions:
- * - production public: always disabled until ops readiness
- * - preview: optional test mode (interactive UI, non-production, no live delivery)
- */
+/** Public enquiry collection stays off until traffic and Papillon terms justify ops. */
 export const ENQUIRY_PUBLIC_ENABLED = false;
 
-export const ENQUIRY_TEST_MODE =
-  IS_PREVIEW && process.env.NEXT_PUBLIC_ENQUIRY_TEST_MODE === "true";
+/** Never enable enquiry test collection on preview for demand validation. */
+export const ENQUIRY_TEST_MODE = false;
 
-/** Canonical host is always the production apex — never workers.dev. */
 export const USE_PRODUCTION_CANONICAL = true;
+
+export const SITE_STAGE = {
+  id: "seo-demand-validation",
+  label: "SEO and demand-validation site",
+  philosophy: SITE.philosophy,
+} as const;

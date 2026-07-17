@@ -201,8 +201,8 @@ export default async function ExcursionDetailPage({
                   </a>
                 </>
               ) : (
-                <Link href="/contact" className="btn-accent mt-6 w-full">
-                  Enquire
+                <Link href="/shore-excursions" className="btn-accent mt-6 w-full">
+                  Browse Salerno excursions
                 </Link>
               )}
               <p className="mt-3 text-xs text-volcanic-500">

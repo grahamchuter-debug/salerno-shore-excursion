@@ -65,7 +65,7 @@ export function SignatureTourFeature() {
 
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link href={SIGNATURE_TOURS_PATH} className="btn-accent">
-                  View Our Signature Tours
+                  Explore This Signature Experience
                 </Link>
                 <Link href="/shore-excursions" className="btn-secondary">
                   Compare All Salerno Excursions
@@ -76,7 +76,7 @@ export function SignatureTourFeature() {
                 {signatureTourDisclosures.operator} {signatureTourDisclosures.notExclusive}
               </p>
               <p className="mt-2 text-xs leading-relaxed text-volcanic-500">
-                {signatureTourDisclosures.commercial}
+                {signatureTourEditorial.stageNote}
               </p>
             </div>
           </div>

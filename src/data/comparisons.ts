@@ -431,7 +431,7 @@ export const comparisons: Comparison[] = [
       "Choose private touring when party composition, mobility or interests do not fit standard departures — but accept that private does not mean unlimited stops or guaranteed Positano on every summer day.",
     overview: [
       "Private vehicles help families, multi-generational groups and friends travelling together without sharing a coach.",
-      "Signature Tours may operate as private or shared small-group depending on confirmed commercial setup — enquire for your sailing.",
+      "Signature Tours are designed around a maximum eight-seat experience; shared small-group and private formats are both in the content model for later activation.",
       "SEG and other partners also list private Naples, Pompeii, Paestum and coastal products — compare responsibilities and inclusions carefully.",
     ],
     guideItems: [
@@ -458,7 +458,7 @@ export const comparisons: Comparison[] = [
       {
         question: "Is a Signature Tour private?",
         answer:
-          "The commercial setup may include private charter or shared small-group departures. Confirm the format for your sailing at enquiry — do not assume exclusivity without written confirmation.",
+          "The content model supports both shared small-group and private eight-seat formats. Scheduled shared departures and private pricing are not announced until booking is approved — do not assume exclusivity.",
       },
       {
         question: "Can a private tour visit every Amalfi town plus Pompeii?",

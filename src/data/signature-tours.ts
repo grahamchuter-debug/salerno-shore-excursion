@@ -1,24 +1,20 @@
 /**
  * SIGNATURE TOURS — Salerno Shore Excursion
  *
- * Public sources checked 2026-07-17.
- * Commercial activation blocked until items in LAUNCH-BLOCKERS.md are cleared.
- *
- * Pricing: use src/data/pricing.ts for internal model only — never render prices.
- * Capacity: use src/data/capacity.ts — do not advertise minimum six or >8 guests.
+ * Site stage: SEO and demand validation — not an active direct-booking launch.
+ * Do not display prices, availability statuses, or bookable claims.
  */
 
 import type { FAQ } from "./types";
 import type { EditorialBadge } from "./badges";
 import { capacityConfig, tourFormatCopy } from "./capacity";
-import { ENQUIRY_PUBLIC_ENABLED } from "@/lib/runtime";
 
 export const SIGNATURE_TOURS_PATH = "/signature-tours";
 
-/** @deprecated Use ENQUIRY_PUBLIC_ENABLED / ENQUIRY_TEST_MODE from runtime */
-export const ENQUIRY_FORM_ENABLED = ENQUIRY_PUBLIC_ENABLED;
+/** @deprecated Public enquiry remains disabled */
+export const ENQUIRY_FORM_ENABLED = false;
 
-export type BookingMode = "enquiry" | "external" | "direct" | "coming-soon";
+export type BookingMode = "editorial" | "enquiry" | "direct" | "coming-soon";
 
 export type SignatureTourId =
   | "salerno-pompeii-vesuvius-winery"
@@ -28,8 +24,8 @@ export interface OptionalExtra {
   id: string;
   label: string;
   description: string;
-  /** Public display status — never show numeric amounts until approved */
-  priceDisplay: "not-shown" | "confirmed-with-availability";
+  /** Never show numeric prices at this stage */
+  priceDisplay: "not-shown";
   required: boolean;
   includedByDefault: boolean;
 }
@@ -59,24 +55,21 @@ export interface SignatureTourConfig {
   bookingMode: BookingMode;
   sourceUrl: string;
   duration: string | null;
-  /** Public advertised max — never above 8 at launch */
   maxGuests: 8;
-  /** Internal min — not published until approved */
-  minGuestsInternal: 6;
-  /** Always null in public data until pricing approved */
+  /** Always null — never publish prices */
   priceFrom: null;
   childPrice: null;
   currency: "EUR";
-  bookingUrl: string | null;
+  bookingUrl: null;
   enquiryUrl: string;
-  whatsapp: string | null;
+  whatsapp: null;
   pickupPoint: string | null;
   departureTime: string | null;
   returnTime: string | null;
   vehicle: string | null;
   groupFormat: string;
-  operatingDates: string | null;
-  availability: string | null;
+  operatingDates: null;
+  availability: null;
   badges: string[];
   recommendation: string;
   inclusions: string[];
@@ -87,8 +80,8 @@ export interface SignatureTourConfig {
   itineraryOptions?: ItineraryOption[];
   pendingConfirmation: string[];
   imageKey: string;
-  /** Slot for authorised Papillon / vehicle photography later */
   authorisedImageSlot: string;
+  editorialCtas: { label: string; href: string }[];
 }
 
 export const optionalEnhancementsShared: OptionalExtra[] = [
@@ -96,7 +89,7 @@ export const optionalEnhancementsShared: OptionalExtra[] = [
     id: "pompeii-entry",
     label: "Pompeii and Vesuvius admission",
     description:
-      "Pompeii and Vesuvius admission arranged separately unless stated on your written confirmation. Pompeii uses nominative tickets and timed capacity controls — passenger names and timed-entry details are collected after initial availability is established.",
+      "Pompeii and Vesuvius admission would be arranged separately unless stated when reservations are activated. Pompeii uses nominative tickets and timed capacity controls — passenger names and timed-entry details would be collected after an initial booking stage.",
     priceDisplay: "not-shown",
     required: true,
     includedByDefault: false,
@@ -105,8 +98,8 @@ export const optionalEnhancementsShared: OptionalExtra[] = [
     id: "pompeii-guide",
     label: "Optional private Pompeii guide",
     description:
-      "A licensed guide for the excavations can enrich the visit. This is a genuine optional enhancement — not included in the base touring day unless confirmed.",
-    priceDisplay: "confirmed-with-availability",
+      "A licensed guide for the excavations can enrich the visit. This is a genuine optional enhancement — not part of the base touring concept unless later confirmed in writing.",
+    priceDisplay: "not-shown",
     required: false,
     includedByDefault: false,
   },
@@ -116,8 +109,8 @@ export const optionalWineryEnhancement: OptionalExtra = {
   id: "winery-lunch",
   label: "Optional winery visit, tasting and lunch",
   description:
-    "Available on the Pompeii and Vesuvius Signature Tour only when your confirmed booking version includes it. Not part of the headline touring day by default.",
-  priceDisplay: "confirmed-with-availability",
+    "Shown as a possible enhancement on the Pompeii and Vesuvius Signature concept only. Not included by default. Pricing and availability will be confirmed when reservations are activated.",
+  priceDisplay: "not-shown",
   required: false,
   includedByDefault: false,
 };
@@ -137,22 +130,21 @@ export const signatureTours: SignatureTourConfig[] = [
     supplier: "Papillon Service",
     localOperator: "Papillon Service",
     directProduct: true,
-    bookingMode: "enquiry",
+    bookingMode: "editorial",
     sourceUrl:
       "https://www.papillonservice.com/excursion/pompei-mt-vesuvius-optional-winery-salerno/",
     duration: "Approximately 8 hours",
     maxGuests: 8,
-    minGuestsInternal: 6,
     priceFrom: null,
     childPrice: null,
     currency: "EUR",
     bookingUrl: null,
-    enquiryUrl: "/signature-tours/pompeii-vesuvius-winery/#request-availability",
+    enquiryUrl: "/signature-tours/pompeii-vesuvius-winery/#explore",
     whatsapp: null,
-    pickupPoint: "Ship-side or Salerno cruise port collection where confirmed for your sailing",
-    departureTime: "Typically morning ship collection (confirm for your call)",
-    returnTime: "Late afternoon, planned around all-aboard (confirm for your call)",
-    vehicle: "Eight-seat touring vehicle",
+    pickupPoint: "Ship-side or Salerno cruise port collection where confirmed for a future sailing",
+    departureTime: null,
+    returnTime: null,
+    vehicle: "Eight-seat touring vehicle (concept)",
     groupFormat: tourFormatCopy.shared.label,
     operatingDates: null,
     availability: null,
@@ -165,39 +157,45 @@ export const signatureTours: SignatureTourConfig[] = [
     recommendation:
       "Best for passengers who want the strongest combination of archaeology, landscape and local wine culture.",
     inclusions: [
-      "Cruise-aware collection and return planning arranged with Papillon Service",
-      "Touring in an eight-seat vehicle (shared small-group or private, as confirmed)",
-      "Time at Pompeii and Mount Vesuvius as operationally confirmed for your sailing",
+      "Cruise-aware collection and return planning designed with a trusted local transport partner",
+      "Touring concept built around an eight-seat vehicle",
+      "Time at Pompeii and Mount Vesuvius as outlined in the suggested itinerary",
     ],
     exclusions: [
-      "Pompeii and Vesuvius admission unless stated on your confirmation",
+      "Pompeii and Vesuvius admission unless later stated on a written confirmation",
       "Optional private Pompeii guide",
       "Optional winery visit, tasting and lunch",
       "Meals and drinks outside a confirmed winery option",
-      "Any costs not listed on your written confirmation",
+      "Any costs not listed on a future written confirmation",
     ],
     optionalExtras: [...optionalEnhancementsShared, optionalWineryEnhancement],
     accessibilityWarnings: [
       "The Mount Vesuvius summit section involves a steep uphill walk (supplier notes roughly 20 minutes at about a 14% grade) and is not suitable for all mobility levels.",
       "Uneven archaeological surfaces at Pompeii require steady footing and suitable footwear.",
-      "If mobility is limited, choose a different Salerno day — do not book this itinerary hoping the Vesuvius walk can be skipped without changing the product.",
+      "If mobility is limited, choose a different Salerno day — do not plan this itinerary hoping the Vesuvius walk can be skipped without changing the experience.",
     ],
     operationalNotes: [
-      "Precise timings depend on your ship’s arrival, traffic and Vesuvius park procedures.",
-      "Vesuvius access is subject to park regulations and may need discussion before booking.",
-      "The winery is optional — never presented as a standard inclusion unless your booking version confirms it.",
-      "Ship all-aboard time always overrides the planned itinerary.",
+      "Precise timings would depend on ship arrival, traffic and Vesuvius park procedures.",
+      "Vesuvius access is subject to park regulations.",
+      "The winery is optional — never presented as a standard inclusion unless a booking version confirms it.",
+      "Ship all-aboard time always overrides any planned itinerary.",
+      "Individual seat sales and scheduled shared departures are not announced on this site yet.",
     ],
     pendingConfirmation: [
-      "Final customer adult and child prices",
-      "Shared-departure confirmation process",
-      "Winery adult and child pricing",
-      "Guide pricing",
+      "Discounted Papillon commercial rates",
+      "Customer selling prices",
+      "Shared vs private activation",
       "Cancellation and missed-port terms",
-      "Image permission for authorised vehicle photography",
+      "Image permission",
     ],
     imageKey: "vesuvius",
     authorisedImageSlot: "awaiting-papillon-permission-vehicle-and-experience",
+    editorialCtas: [
+      { label: "Explore This Signature Experience", href: "#explore" },
+      { label: "See the Suggested Itinerary", href: "#itinerary" },
+      { label: "Is This Tour Right for You?", href: "#right-for-you" },
+      { label: "View Cruise-Day Details", href: "#cruise-day" },
+    ],
   },
   {
     id: "salerno-pompeii-amalfi-coast",
@@ -213,22 +211,21 @@ export const signatureTours: SignatureTourConfig[] = [
     supplier: "Papillon Service",
     localOperator: "Papillon Service",
     directProduct: true,
-    bookingMode: "enquiry",
+    bookingMode: "editorial",
     sourceUrl:
       "https://www.papillonservice.com/excursion/pompei-positano-amalfi-ravello/",
     duration: "Approximately 9 hours",
     maxGuests: 8,
-    minGuestsInternal: 6,
     priceFrom: null,
     childPrice: null,
     currency: "EUR",
     bookingUrl: null,
-    enquiryUrl: "/signature-tours/pompeii-amalfi-coast/#request-availability",
+    enquiryUrl: "/signature-tours/pompeii-amalfi-coast/#explore",
     whatsapp: null,
-    pickupPoint: "Ship-side or Salerno cruise port collection where confirmed for your sailing",
-    departureTime: "Typically morning ship collection (confirm for your call)",
-    returnTime: "Late afternoon, planned around all-aboard (confirm for your call)",
-    vehicle: "Eight-seat touring vehicle",
+    pickupPoint: "Ship-side or Salerno cruise port collection where confirmed for a future sailing",
+    departureTime: null,
+    returnTime: null,
+    vehicle: "Eight-seat touring vehicle (concept)",
     groupFormat: tourFormatCopy.shared.label,
     operatingDates: null,
     availability: null,
@@ -241,16 +238,16 @@ export const signatureTours: SignatureTourConfig[] = [
     recommendation:
       "Best for first-time visitors who cannot choose between Pompeii and the Amalfi Coast.",
     inclusions: [
-      "Cruise-aware collection and return planning arranged with Papillon Service",
-      "Touring in an eight-seat vehicle (shared small-group or private, as confirmed)",
-      "Pompeii visit plus a selected Amalfi Coast town combination confirmed for your sailing",
+      "Cruise-aware collection and return planning designed with a trusted local transport partner",
+      "Touring concept built around an eight-seat vehicle",
+      "Pompeii plus a selected Amalfi Coast town combination as outlined in the suggested itinerary options",
     ],
     exclusions: [
-      "Pompeii admission unless stated on your confirmation",
+      "Pompeii admission unless later stated on a written confirmation",
       "Optional private Pompeii guide",
       "Town attraction admissions unless confirmed in writing",
       "Meals and drinks",
-      "Guaranteed free time in every named coastal town on every departure",
+      "Guaranteed free time in every named coastal town",
     ],
     optionalExtras: [...optionalEnhancementsShared],
     accessibilityWarnings: [
@@ -258,11 +255,12 @@ export const signatureTours: SignatureTourConfig[] = [
       "Amalfi Coast towns often include slopes, steps and limited vehicle access — expect walking once you leave the van.",
     ],
     operationalNotes: [
-      "Supplier guidance notes roughly 3.5 hours of travel time for fuller coastal combinations.",
+      "About 3.5 hours of travel time is a realistic planning assumption for fuller coastal combinations.",
       "Adding Positano can add about an hour of driving — more in summer traffic.",
-      "The most balanced days often choose Pompeii plus Amalfi or Ravello rather than forcing every highlight.",
-      "Stops may be adjusted for traffic, parking and ship schedule — Positano is not guaranteed on every departure.",
+      "Balanced days often choose Pompeii plus Amalfi or Ravello rather than forcing every highlight.",
+      "Stops may need adjustment for traffic, parking and ship schedule — Positano is not guaranteed in every version of the day.",
       "The best day is not always the day with the most stops.",
+      "Individual seat sales and scheduled shared departures are not announced on this site yet.",
     ],
     itineraryOptions: [
       {
@@ -297,39 +295,51 @@ export const signatureTours: SignatureTourConfig[] = [
         stops: ["Pompeii", "Positano", "Amalfi or Ravello"],
         notes: [
           "Not every destination can always receive extensive free time.",
-          "Expect operational honesty: the driver may change order or drop a stop to protect return-to-ship timing.",
+          "Expect operational honesty: order or stops may change to protect return-to-ship timing.",
         ],
       },
     ],
     pendingConfirmation: [
-      "Final customer adult and child prices",
-      "Default coastal combination at enquiry",
-      "Private vehicle pricing process",
+      "Discounted Papillon commercial rates",
+      "Customer selling prices",
+      "Default coastal combination when booking activates",
       "Cancellation and missed-port terms",
-      "Image permission for authorised vehicle photography",
+      "Image permission",
     ],
     imageKey: "positano",
     authorisedImageSlot: "awaiting-papillon-permission-vehicle-and-experience",
+    editorialCtas: [
+      { label: "Explore This Signature Experience", href: "#explore" },
+      { label: "See the Suggested Itinerary", href: "#itinerary" },
+      { label: "Is This Tour Right for You?", href: "#right-for-you" },
+      { label: "View Cruise-Day Details", href: "#cruise-day" },
+    ],
   },
 ];
 
 export const signatureTourDisclosures = {
   operator:
-    "Selected by Salerno Shore Excursion and operated locally by Papillon Service, an independent Italian touring provider.",
+    "Selected by Salerno Shore Excursion and designed around touring with Papillon Service, an independent local transport provider.",
+  itineraryBased:
+    "This experience is based on an itinerary provided locally by Papillon Service. Booking arrangements, final inclusions and operating terms will be confirmed when reservations are activated.",
   supporting:
-    "We select and arrange this small-group experience with Papillon Service. Your booking confirmation will identify the responsible service provider and the terms applying to your reservation.",
-  selectedExperience:
-    "Selected by Salerno Shore Excursion and operated locally by Papillon Service, an independent Italian touring provider.",
-  partnership:
-    "We select and arrange this small-group experience with Papillon Service. Your booking confirmation will identify the responsible service provider and the terms applying to your reservation.",
+    "Selected eight-seat tour concepts being developed with our trusted local transport partner.",
+  productFraming:
+    "Our selected small-group itinerary, designed around a maximum eight-seat touring experience.",
   commercial:
-    "Signature Tours are our primary commercial recommendations. We may earn more from these selected experiences than from some partner alternatives. Recommendations still follow suitability for your port day.",
+    "Signature Tours are our primary editorial recommendations. When booking is later activated, commercial terms will be confirmed in writing.",
   notExclusive:
     "“Salerno Signature Tour” refers to our editorial and commercial selection, not ownership of the vehicle operator.",
   segContrast:
     "Partner excursions booked through Shore Excursions Group are operated through SEG or its local supplier network — not as Salerno Shore Excursion Signature Tours.",
-  forbiddenClaims:
-    "Do not claim: operated by Salerno Shore Excursion; our drivers; our vehicles; exclusive Papillon tour — unless a later contract supports those words.",
+  forbiddenClaims: [
+    "currently bookable",
+    "guaranteed departure",
+    "exclusive",
+    "operated by us",
+    "our vehicle",
+    "daily departures",
+  ],
 } as const;
 
 export const signatureTourEditorial = {
@@ -340,13 +350,15 @@ export const signatureTourEditorial = {
     "An eight-seat vehicle keeps the day flexible, conversation possible, and cruise timing easier to protect than on a packed coach.",
   honestyPrinciple:
     "The best day is not always the day with the most stops. Summer traffic, Vesuvius walking demands and ship schedules matter more than brochure highlight counts.",
+  stageNote:
+    "These Signature pages help you compare realistic Salerno days. Reservations are not open on this site yet.",
   sharedVsPrivate: {
-    heading: "Shared small-group or private vehicle?",
+    heading: "Shared small-group or private eight-seat vehicle?",
     shared: tourFormatCopy.shared,
     private: tourFormatCopy.private,
-    note: "We promote the shared Signature Tour concept editorially and welcome private-vehicle enquiries. We do not claim scheduled shared departures are confirmed for every sailing date, and we do not publish private pricing.",
+    note: "Both formats are part of the content model. We do not announce scheduled shared departures or private pricing until booking is approved.",
   },
-  capacityNote: `Signature Tours use vehicles for a maximum of ${capacityConfig.publicMaxGuestsAdvertised} guests. We do not display remaining-seat counters or invent scarcity.`,
+  capacityNote: `Designed around a maximum of ${capacityConfig.publicMaxGuestsAdvertised} guests. We do not display remaining seats, vehicle counts or departure status on this site.`,
 };
 
 export function getSignatureTour(slug: string): SignatureTourConfig | undefined {
@@ -357,34 +369,34 @@ export function getSignatureTourById(id: SignatureTourId): SignatureTourConfig |
   return signatureTours.find((tour) => tour.id === id);
 }
 
+/** Editorial CTAs only — never Book Now / Request Availability at this stage. */
 export function getSignatureTourCta(tour: SignatureTourConfig) {
-  if (tour.bookingMode === "enquiry") {
-    return { href: tour.enquiryUrl || tour.path, label: "Request Availability" };
-  }
-  if (tour.bookingMode === "external" && tour.bookingUrl) {
-    return { href: tour.bookingUrl, label: "Check Partner Availability" };
-  }
-  if (tour.bookingMode === "direct" && tour.bookingUrl) {
-    return { href: tour.bookingUrl, label: "Choose Your Date" };
-  }
-  return { href: tour.path, label: "Check Your Sailing" };
+  return {
+    href: tour.path,
+    label: "Explore This Signature Experience",
+  };
 }
 
 export const signatureTourFaqs: FAQ[] = [
   {
     question: "Are Signature Tours the same as Shore Excursions Group products?",
     answer:
-      "No. Signature Tours are selected by Salerno Shore Excursion and operated locally by Papillon Service. SEG products are booked and operated through Shore Excursions Group or its local supplier network.",
+      "No. Signature Tours are selected by Salerno Shore Excursion and designed around touring with Papillon Service. SEG products are booked and operated through Shore Excursions Group or its local supplier network.",
+  },
+  {
+    question: "Can I book a Signature Tour on this website today?",
+    answer:
+      "Not yet. This site is published so you can plan honestly and compare options. Booking arrangements will be confirmed when reservations are activated.",
   },
   {
     question: "Is this a shared small-group tour or a private vehicle?",
     answer:
-      "Our primary recommendation is a shared small-group Signature Tour with a maximum of eight guests. A private vehicle for your party is available on request. Shared departures are confirmed operationally for your sailing — we do not claim fixed daily schedules until supply is live.",
+      "The content model supports both a shared small-group concept (maximum eight guests) and a private eight-seat vehicle. Scheduled shared departures and private pricing are not announced until approved.",
   },
   {
     question: "Is the winery included on the Pompeii and Vesuvius day?",
     answer:
-      "Only if your confirmed booking version includes it. Treat the winery visit, tasting and lunch as an optional enhancement unless your written confirmation says otherwise.",
+      "It is described as an optional enhancement. Treat it as included only if a future written confirmation says so.",
   },
   {
     question: "Can everyone manage Mount Vesuvius?",
@@ -392,18 +404,8 @@ export const signatureTourFaqs: FAQ[] = [
       "No. Reaching the summit area involves a steep uphill walk and is not suitable for all mobility levels. Choose another Salerno itinerary if that walk is a concern.",
   },
   {
-    question: "Will every Pompeii and Amalfi Coast departure include Positano?",
+    question: "Will every Pompeii and Amalfi Coast day include Positano?",
     answer:
-      "Not necessarily. Traffic, parking and ship timing can require a more balanced combination such as Pompeii plus Amalfi or Ravello. We prefer an honest day over an overloaded promise.",
-  },
-  {
-    question: "Can I book online and pay now?",
-    answer:
-      "Secure online payment is not active yet. You can request availability for your sailing; confirmation and payment instructions follow after operational checks. The future default will be full payment at booking once the checkout is approved.",
-  },
-  {
-    question: "What are the cancellation terms?",
-    answer:
-      "Final cancellation and missed-port wording is awaiting contractual confirmation. We will publish clear terms before accepting paid bookings. See the Signature Tour terms page for the current status.",
+      "Not necessarily. Traffic, parking and ship timing can favour a more balanced combination such as Pompeii plus Amalfi or Ravello. We prefer an honest day over an overloaded promise.",
   },
 ];

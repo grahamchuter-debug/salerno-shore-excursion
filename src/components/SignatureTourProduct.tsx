@@ -4,12 +4,13 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { JsonLd } from "@/components/JsonLd";
 import { SignatureTourBadge } from "@/components/SignatureTourBadge";
 import { SignatureEnquiryForm } from "@/components/SignatureEnquiryForm";
+import { BookingComingLaterNotice } from "@/components/BookingComingLaterNotice";
 import { ResponsiveImage } from "@/components/ResponsiveImage";
 import { articleSchema, breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { getSignatureImage } from "@/lib/images";
-import { signatureTourEditorial } from "@/data/signature-tours";
 import {
   signatureTourDisclosures,
+  signatureTourEditorial,
   signatureTourFaqs,
   type SignatureTourConfig,
 } from "@/data/signature-tours";
@@ -28,8 +29,9 @@ function OptionalEnhancements({ tour }: { tour: SignatureTourConfig }) {
         Optional enhancements
       </h2>
       <p className="mt-2 text-sm text-volcanic-600">
-        These items are genuine options — not included in the headline touring day unless your
-        written confirmation says otherwise. Prices are confirmed with availability.
+        These items are genuine options for a future booking — not included in the headline touring
+        concept unless a written confirmation later says otherwise. Prices are not shown on this
+        site yet.
       </p>
       <ul className="mt-4 space-y-4">
         {tour.optionalExtras.map((extra) => (
@@ -37,24 +39,8 @@ function OptionalEnhancements({ tour }: { tour: SignatureTourConfig }) {
             key={extra.id}
             className="rounded-xl border border-limestone-200 bg-white p-5 text-sm leading-relaxed"
           >
-            <p className="font-semibold text-volcanic-900">
-              {extra.label}
-              {extra.required ? (
-                <span className="ml-2 text-xs font-normal text-volcanic-500">
-                  (admission arranged separately unless stated)
-                </span>
-              ) : null}
-            </p>
+            <p className="font-semibold text-volcanic-900">{extra.label}</p>
             <p className="mt-2 text-volcanic-700">{extra.description}</p>
-            {extra.priceDisplay === "confirmed-with-availability" ? (
-              <p className="mt-2 text-xs font-medium uppercase tracking-wide text-ionian-700">
-                Price confirmed with availability
-              </p>
-            ) : (
-              <p className="mt-2 text-xs font-medium uppercase tracking-wide text-volcanic-500">
-                Arranged separately unless stated
-              </p>
-            )}
           </li>
         ))}
       </ul>
@@ -65,7 +51,7 @@ function OptionalEnhancements({ tour }: { tour: SignatureTourConfig }) {
 function SharedVsPrivate() {
   const { sharedVsPrivate } = signatureTourEditorial;
   return (
-    <section className="not-prose my-10">
+    <section id="right-for-you" className="not-prose my-10 scroll-mt-24">
       <h2 className="font-display text-2xl font-semibold text-volcanic-900">
         {sharedVsPrivate.heading}
       </h2>
@@ -144,13 +130,26 @@ export function SignatureTourProduct({ tour, faqs = signatureTourFaqs }: Signatu
             {tour.editorialTitle}
           </h1>
           <p className="mt-3 max-w-2xl text-lg text-white/90">{tour.subtitle}</p>
+          <p className="mt-4 max-w-2xl text-sm text-white/75">{signatureTourEditorial.stageNote}</p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            {tour.editorialCtas.map((cta) => (
+              <a
+                key={cta.label}
+                href={cta.href}
+                className="btn-secondary bg-white/10 text-white border-white/30 hover:bg-white/20"
+              >
+                {cta.label}
+              </a>
+            ))}
+          </div>
         </div>
       </section>
 
-      <article className="section-padding">
+      <article id="explore" className="section-padding scroll-mt-24">
         <div className="container-wide grid gap-12 lg:grid-cols-[1.4fr_0.75fr]">
           <div className="prose-body max-w-3xl">
             <p className="text-lg text-volcanic-800">{tour.recommendation}</p>
+            <p className="text-base text-volcanic-700">{signatureTourDisclosures.supporting}</p>
 
             {tour.accessibilityWarnings.length ? (
               <div className="not-prose my-8 rounded-xl border-2 border-maple-300 bg-maple-50 p-5">
@@ -172,7 +171,9 @@ export function SignatureTourProduct({ tour, faqs = signatureTourFaqs }: Signatu
 
             <SharedVsPrivate />
 
-            <h2>Itinerary</h2>
+            <h2 id="itinerary" className="scroll-mt-24">
+              Suggested itinerary
+            </h2>
             {tour.itineraryOptions?.length ? (
               <div className="not-prose space-y-4">
                 {tour.itineraryOptions.map((opt) => (
@@ -208,18 +209,27 @@ export function SignatureTourProduct({ tour, faqs = signatureTourFaqs }: Signatu
               <ul>
                 <li>Pompeii archaeological visit</li>
                 <li>Mount Vesuvius crater area (subject to park access and mobility suitability)</li>
-                <li>Optional winery stop when confirmed for your booking version</li>
+                <li>Optional winery stop when a future booking version includes it</li>
               </ul>
             )}
 
-            <h2>What is included</h2>
+            <h2 id="cruise-day" className="scroll-mt-24">
+              Cruise-day details
+            </h2>
+            <ul>
+              {tour.duration ? <li>Suggested duration: {tour.duration}</li> : null}
+              <li>Designed around a maximum of {tour.maxGuests} guests</li>
+              {tour.pickupPoint ? <li>Pickup concept: {tour.pickupPoint}</li> : null}
+            </ul>
+
+            <h2>What the concept includes</h2>
             <ul>
               {tour.inclusions.map((i) => (
                 <li key={i}>{i}</li>
               ))}
             </ul>
 
-            <h2>What is not included</h2>
+            <h2>What is not assumed included</h2>
             <ul>
               {tour.exclusions.map((e) => (
                 <li key={e}>{e}</li>
@@ -228,7 +238,7 @@ export function SignatureTourProduct({ tour, faqs = signatureTourFaqs }: Signatu
 
             {tour.operationalNotes.length ? (
               <>
-                <h2>Operational notes</h2>
+                <h2>Planning notes</h2>
                 <ul>
                   {tour.operationalNotes.map((n) => (
                     <li key={n}>{n}</li>
@@ -241,8 +251,7 @@ export function SignatureTourProduct({ tour, faqs = signatureTourFaqs }: Signatu
 
             <div className="not-prose mt-10 space-y-3 rounded-xl border border-limestone-200 bg-limestone-50/80 p-5 text-sm leading-relaxed text-volcanic-700">
               <p>{signatureTourDisclosures.operator}</p>
-              <p>{signatureTourDisclosures.supporting}</p>
-              <p>{signatureTourDisclosures.commercial}</p>
+              <p>{signatureTourDisclosures.itineraryBased}</p>
               <p>{signatureTourDisclosures.notExclusive}</p>
               <p>{signatureTourDisclosures.segContrast}</p>
             </div>
@@ -254,24 +263,18 @@ export function SignatureTourProduct({ tour, faqs = signatureTourFaqs }: Signatu
               <dl className="mt-4 space-y-3 text-sm">
                 {tour.duration ? (
                   <div>
-                    <dt className="font-semibold">Duration</dt>
+                    <dt className="font-semibold">Suggested duration</dt>
                     <dd>{tour.duration}</dd>
                   </div>
                 ) : null}
                 <div>
                   <dt className="font-semibold">Group format</dt>
-                  <dd>Maximum {tour.maxGuests} guests per vehicle</dd>
+                  <dd>Maximum {tour.maxGuests} guests</dd>
                 </div>
                 <div>
-                  <dt className="font-semibold">Local operator</dt>
+                  <dt className="font-semibold">Local transport partner</dt>
                   <dd>{tour.localOperator}</dd>
                 </div>
-                {tour.pickupPoint ? (
-                  <div>
-                    <dt className="font-semibold">Pickup</dt>
-                    <dd>{tour.pickupPoint}</dd>
-                  </div>
-                ) : null}
               </dl>
 
               <div className="mt-6 rounded-lg border border-ionian-200 bg-ionian-50/80 p-4 text-sm">
@@ -279,39 +282,28 @@ export function SignatureTourProduct({ tour, faqs = signatureTourFaqs }: Signatu
                 <p className="mt-1 text-volcanic-700">{signatureTourEditorial.capacityNote}</p>
               </div>
 
-              <p className="mt-4 text-xs text-volcanic-500">
-                Pricing is confirmed with availability. No online payment is active on this page.
-              </p>
+              <BookingComingLaterNotice />
 
-              <Link href="#request-availability" className="btn-accent mt-6 w-full">
-                Request Availability
-              </Link>
-              <Link href="/cruise-planner" className="btn-secondary mt-3 w-full">
-                Check Your Sailing
-              </Link>
-              <Link href="/shore-excursions" className="btn-secondary mt-3 w-full">
+              <Link href="/shore-excursions" className="btn-secondary mt-4 w-full">
                 Compare partner excursions
               </Link>
-              <Link
-                href="/signature-tour-terms"
-                className="mt-4 block text-center text-sm font-medium text-ionian-700 underline underline-offset-2"
-              >
-                Cancellation terms status
+              <Link href="/cruise-planner" className="btn-secondary mt-3 w-full">
+                Plan your port hours
               </Link>
             </div>
 
             <div className="rounded-xl border border-dashed border-limestone-300 bg-white p-4 text-xs text-volcanic-500">
               <p className="font-semibold text-volcanic-700">Image slot reserved</p>
               <p className="mt-1">
-                Authorised vehicle and experience photography will replace destination imagery here
-                once Papillon permission is confirmed. Slot: {tour.authorisedImageSlot}.
+                Authorised vehicle and experience photography will replace destination imagery once
+                written permission is confirmed.
               </p>
             </div>
           </aside>
         </div>
 
         <div className="container-wide mt-12 max-w-3xl">
-          <SignatureEnquiryForm tourId={tour.id} tourTitle={tour.title} />
+          <SignatureEnquiryForm tourTitle={tour.title} />
         </div>
       </article>
 

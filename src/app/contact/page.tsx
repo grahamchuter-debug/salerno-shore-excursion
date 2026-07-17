@@ -7,7 +7,7 @@ import { breadcrumbSchema } from "@/lib/schema";
 export const metadata = buildMetadata({
   title: "Contact Salerno Shore Excursion",
   description:
-    "Enquire about Salerno Signature Tours or ask for help choosing a Salerno shore excursion for your port call.",
+    "Contact Salerno Shore Excursion for planning questions about Salerno shore excursions, Pompeii, Vesuvius and the Amalfi Coast.",
   path: "/contact",
 });
 
@@ -23,11 +23,12 @@ export default function ContactPage() {
       <section className="section-padding">
         <div className="container-wide max-w-3xl">
           <Breadcrumbs items={crumbs} />
-          <p className="section-eyebrow">Enquiry</p>
+          <p className="section-eyebrow">Planning help</p>
           <h1 className="section-title mt-2">Contact us</h1>
           <p className="section-subtitle">
-            Ask about Signature Tour availability for your sailing, or request help comparing Salerno
-            excursion options. We reply by email.
+            Questions about planning a Salerno port day are welcome. Signature Tour reservations are
+            not open on this site yet — this is an editorial planning resource while we validate
+            demand.
           </p>
 
           <div className="mt-10 card-feature">
@@ -47,16 +48,19 @@ export default function ContactPage() {
           </div>
 
           <div className="prose-body mt-10">
-            <h2>What happens next</h2>
+            <h2>What this site is for now</h2>
             <p>
-              For Signature Tour enquiries we confirm whether the requested date can be operated,
-              clarify format and timing, and share price details before you commit. Direct online
-              checkout is not live yet — availability requests will open once operational
-              confirmation is complete.
+              Salerno Shore Excursion is currently an editorial planning and demand-validation
+              resource. We are not collecting Signature Tour reservations or deposits on this site.
+              Use the Signature and partner pages to compare realistic port-day options.
             </p>
             <p>
-              For partner excursions we can help you compare formats, then you complete booking on
-              the relevant supplier page where prices are current.
+              For partner excursions listed through Shore Excursions Group, complete any booking on
+              the supplier page where live prices and availability are shown.
+            </p>
+            <p>
+              When Signature Tour reservations are later activated, commercial terms — including
+              format, inclusions and pricing — will be confirmed in writing before you commit.
             </p>
           </div>
         </div>

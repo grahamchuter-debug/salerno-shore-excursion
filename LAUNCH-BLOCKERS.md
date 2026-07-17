@@ -1,41 +1,47 @@
 # Launch blockers — commercial activation
 
-These items **block commercial activation** (paid bookings, live enquiry delivery, published prices, cancellation promises).  
-They do **not** block site construction or workers.dev preview deployment.
+These items **block commercial activation** (prices, enquiries, booking, payment).  
+They do **not** block the SEO destination site, first commit, or workers.dev preview.
+
+**Current stage:** SEO and demand validation — not an active direct-booking launch.
 
 Last updated: 2026-07-17
 
-| # | Blocker | Status | Notes |
-|---|---------|--------|-------|
-| 1 | Papillon net rates | Open | Confirm current net vehicle rate vs public party rates |
-| 2 | VAT and payment treatment | Open | Who charges VAT; payment recipient |
-| 3 | Final customer prices | Open | adultPrice / childPrice — do not publish until agreed |
-| 4 | Shared-tour minimum | Configured internally (6) | Do not publish “minimum six” until terms + fallback approved |
-| 5 | Vehicle availability process | Open | Vehicles 2–3 disabled until sailing-specific confirmation |
-| 6 | Cancellation deadline | Open | Intended: free cancel ≤24h — not live |
-| 7 | Missed-port terms | Open | Intended: full refund if ship does not call Salerno — not live |
-| 8 | Supplier liability wording | Open | Confirmation must name responsible provider |
-| 9 | Guide pricing | Open | optionalGuidePrice — show as enhancement only |
-| 10 | Winery pricing | Open | optionalWineryAdultPrice / ChildPrice |
-| 11 | Admission-ticket process | Open | Nominative / timed Pompeii tickets after booking stage |
-| 12 | Image permission | Open | No Papillon photos/logo until written OK — see IMAGE-REPLACEMENT-LIST.md |
-| 13 | Customer-support responsibility | Open | Who answers day-of and pre-trip queries |
-| 14 | Emergency contact process | Open | Ship-day escalation path |
+| # | Blocker | Status |
+|---|---------|--------|
+| 1 | Papillon discounted commercial rates (not public website rates) | Open |
+| 2 | VAT and payment treatment | Open |
+| 3 | Final customer prices | Open — do not publish |
+| 4 | Shared small-group vs private activation | Content model ready; not announced as operating |
+| 5 | Vehicle availability process beyond one van | Architecture only; do not display |
+| 6 | Cancellation / deposit / payment terms | Do not publish yet |
+| 7 | Missed-port arrangements | Open |
+| 8 | Supplier liability wording for live bookings | Open |
+| 9 | Guide / winery / ticket commercial terms | Open |
+| 10 | Image permission | Open — see IMAGE-REPLACEMENT-LIST.md |
+| 11 | Customer-support responsibility | Open |
+| 12 | Emergency contact process | Open |
+| 13 | Enough organic traffic to justify enquiry ops | Measure first |
+| 14 | Analytics setup approval (demand events prepared, not fired) | Open |
 
-## Also required before live enquiry delivery
+## Demand sequence (approved)
 
-- Destination inbox confirmed  
-- Privacy wording complete  
-- Notification delivery tested  
-- Spam protection working  
-- Operational response process agreed  
+1. Build destination authority site  
+2. Publish and index (after separate production-domain approval)  
+3. Earn impressions and clicks  
+4. Identify which excursion / Signature pages attract demand  
+5. Confirm Papillon discounted rates and terms  
+6. Set customer prices  
+7. Activate enquiries or direct booking  
 
-## Domain / SEO activation (separate approvals)
+## Not approved yet
 
-- Attach `salernoshoreexcursion.com`  
-- www → apex redirect  
-- Remove preview noindex  
-- Activate production enquiry form  
-- Submit sitemap / Search Console  
+- Customer prices  
+- Live enquiry form  
+- Live shared departures  
+- Seat availability UI  
+- Payment  
+- Production-domain attachment  
+- Indexing (preview remains noindex)  
 
-See also: `PHASE1-COMMERCIAL-ARCHITECTURE.md`, `SIGNATURE_TOUR_CONFIRMATION.md`, `docs/WORKERS-READINESS.md`.
+After workers.dev visual/content review, request **separate approval** for the production domain.
