@@ -1,6 +1,8 @@
 # Salerno Shore Excursion — Workers readiness
 
-**Status:** Built and locally audited. **Not deployed. Custom domain not attached.**
+**Status:** workers.dev preview deployed. **Custom domain not attached.**
+
+**Preview:** https://salerno-shore-excursion.dark-violet-8d91.workers.dev
 
 | Item | Value |
 |------|--------|
