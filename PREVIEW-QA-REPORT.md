@@ -2,6 +2,8 @@
 
 **Preview URL:** https://salerno-shore-excursion.dark-violet-8d91.workers.dev  
 **Worker:** `salerno-shore-excursion`  
+**Version ID:** `14b48f83-4c28-43e7-84b5-258f16cdebdf`  
+**Git:** `b513c8a` (+ follow-up meta scrub if present)  
 **Stage:** SEO and demand validation (not a booking launch)  
 **Production domains:** not attached (awaiting preview sign-off)
 

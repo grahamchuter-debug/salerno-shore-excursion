@@ -12,7 +12,7 @@ export function generateStaticParams() {
 export const metadata = buildMetadata({
   title: "Salerno Signature: Pompeii, Vesuvius and Volcanic Wines",
   description:
-    "Selected eight-seat Signature Tour from Salerno — Pompeii, Mount Vesuvius and optional winery. Mobility warnings, optional costs and cruise-aware pacing.",
+    "Selected eight-seat Signature Tour from Salerno — Pompeii, Mount Vesuvius and optional winery. Mobility warnings and cruise-aware pacing.",
   path: `/signature-tours/${slug}`,
 });
 
