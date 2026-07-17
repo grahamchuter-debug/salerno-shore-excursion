@@ -1,0 +1,15 @@
+{
+  // WORKERS STATIC ASSETS — Salerno Shore Excursion
+  // Custom Domain routes intentionally omitted until deployment approval.
+  // After approval, add apex custom_domain for salernoshoreexcursion.com only.
+  // www → apex is handled by Cloudflare Redirect Rules (not a second Worker origin).
+  "name": "salerno-shore-excursion",
+  "compatibility_date": "2026-07-17",
+  "workers_dev": true,
+  "preview_urls": true,
+  "assets": {
+    "directory": "./out",
+    "html_handling": "force-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "downloadedAt": "2026-07-17T19:08:46.832Z",
+  "images": [
+    {
+      "file": "hero-home.jpg",
+      "status": "failed",
+      "tried": [
+        "File:Amalfi Coast - Salerno.jpg",
+        "File:Costiera Amalfitana.jpg",
+        "File:Amalfi Coast panorama.jpg",
+        "File:Veduta di Salerno.jpg"
+      ]
+    },
+    {
+      "file": "og-default.jpg",
+      "status": "failed",
+      "tried": [
+        "File:Pompeii - Forum and Vesuvius.jpg",
+        "File:Forum of Pompeii with Vesuvius.jpg",
+        "File:Pompei Foro.jpg"
+      ]
+    },
+    {
+      "file": "cruise-port.jpg",
+      "status": "failed",
+      "tried": [
+        "File:Porto di Salerno.jpg",
+        "File:Salerno harbour.jpg",
+        "File:Salerno waterfront.jpg",
+        "File:Lungomare di Salerno.jpg"
+      ]
+    },
+    {
+      "file": "salerno-waterfront.jpg",
+      "status": "failed",
+      "tried": [
+        "File:Lungomare di Salerno.jpg",
+        "File:Salerno lungomare.jpg",
+        "File:Salerno waterfront.jpg"
+      ]
+    },
+    {
+      "file": "salerno-centro.jpg",
+      "status": "failed",
+      "tried": [
+        "File:Salerno centro storico.jpg",
+        "File:Via dei Mercanti Salerno.jpg",
+        "File:Salerno old town.jpg"
+      ]
+    },
+    {
+      "file": "cathedral.jpg",
+      "status": "ok",
+      "title": "File:Duomo di Salerno.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Duomo_di_Salerno.jpg",
+      "bytes": 1400468
+    },
+    {
+      "file": "pompeii.jpg",
+      "status": "ok",
+      "title": "File:Pompeii street.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Pompeii_street.jpg",
+      "bytes": 87095
+    },
+    {
+      "file": "vesuvius.jpg",
+      "status": "ok",
+      "title": "File:Mount Vesuvius from Pompeii.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Mount_Vesuvius_from_Pompeii.jpg",
+      "bytes": 2278550
+    },
+    {
+      "file": "vineyard.jpg",
+      "status": "failed",
+      "tried": [
+        "File:Vineyards on Vesuvius.jpg",
+        "File:Cantina del Vesuvio.jpg",
+        "File:Vesuvius vineyard.jpg",
+        "File:Campania vineyard.jpg"
+      ]
+    },
+    {
+      "file": "amalfi.jpg",
+      "status": "failed",
+      "tried": [
+        "File:Amalfi harbour.jpg",
+        "File:Amalfi Italy.jpg",
+        "File:Amalfi coastline.jpg"
+      ]
+    },
+    {
+      "file": "ravello.jpg",
+      "status": "ok",
+      "title": "File:Villa Cimbrone Ravello.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/3/34/Villa_Cimbrone_Ravello.jpg",
+      "bytes": 1599850
+    },
+    {
+      "file": "positano.jpg",
+      "status": "ok",
+      "title": "File:Positano.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Positano.jpg",
+      "bytes": 46483
+    },
+    {
+      "file": "paestum.jpg",
+      "status": "failed",
+      "tried": [
+        "File:Temple of Hera Paestum.jpg",
+        "File:Paestum temples.jpg",
+        "File:Paestum Italy.jpg"
+      ]
+    },
+    {
+      "file": "food.jpg",
+      "status": "ok",
+      "title": "File:Mozzarella di bufala.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Mozzarella_di_bufala.jpg/3840px-Mozzarella_di_bufala.jpg",
+      "bytes": 1368976
+    },
+    {
+      "file": "boat.jpg",
+      "status": "failed",
+      "tried": [
+        "File:Amalfi Coast boat.jpg",
+        "File:Boat Amalfi Coast.jpg",
+        "File:Costiera Amalfitana from sea.jpg"
+      ]
+    },
+    {
+      "file": "harbour.jpg",
+      "status": "failed",
+      "tried": [
+        "File:Porto di Salerno.jpg",
+        "File:Salerno harbour.jpg",
+        "File:Salerno marina.jpg"
+      ]
+    },
+    {
+      "file": "coast.jpg",
+      "status": "failed",
+      "tried": [
+        "File:Costiera Amalfitana.jpg",
+        "File:Amalfi Coast panorama.jpg",
+        "File:Amalfi Coast road.jpg"
+      ]
+    },
+    {
+      "file": "private.jpg",
+      "status": "failed",
+      "tried": [
+        "File:Amalfi Coast road.jpg",
+        "File:Costiera Amalfitana.jpg"
+      ]
+    },
+    {
+      "file": "walking.jpg",
+      "status": "failed",
+      "tried": [
+        "File:Salerno centro storico.jpg",
+        "File:Via dei Mercanti Salerno.jpg",
+        "File:Salerno streets.jpg"
+      ]
+    },
+    {
+      "file": "compare.jpg",
+      "status": "failed",
+      "tried": [
+        "File:Pompeii - Forum and Vesuvius.jpg",
+        "File:Costiera Amalfitana.jpg"
+      ]
+    },
+    {
+      "file": "family.jpg",
+      "status": "ok",
+      "title": "File:Pompeii street.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Pompeii_street.jpg",
+      "bytes": 87095
+    },
+    {
+      "file": "wine.jpg",
+      "status": "failed",
+      "tried": [
+        "File:Vineyards on Vesuvius.jpg",
+        "File:Campania vineyard.jpg",
+        "File:Vesuvius vineyard.jpg"
+      ]
+    }
+  ]
+}

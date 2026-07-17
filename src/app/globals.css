@@ -1,0 +1,235 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Mediterranean blue → volcanic charcoal — Salerno bay and limestone cliffs.
+     Kept under the `coastal-*` token name so utility classes stay stable. */
+  --color-coastal-50: #eef4f8;
+  --color-coastal-100: #d4e4ef;
+  --color-coastal-200: #a8c8dc;
+  --color-coastal-300: #72a0be;
+  --color-coastal-400: #3f7a9e;
+  --color-coastal-500: #256089;
+  --color-coastal-600: #1c4d6f;
+  --color-coastal-700: #163f5c;
+  --color-coastal-800: #123248;
+  --color-coastal-900: #0c2233;
+  /* Warm limestone and soft cream — Salerno historic centre light */
+  --color-sandstone-300: #efe4d4;
+  --color-sandstone-400: #dcc5a0;
+  --color-sandstone-500: #c4a068;
+  /* Vineyard green — Cilento hills and Campanian countryside */
+  --color-forest-50: #f2f5f1;
+  --color-forest-100: #dfe6dc;
+  --color-forest-600: #5a6d58;
+  --color-forest-700: #455543;
+  --color-forest-800: #334032;
+  /* Terracotta — warm secondary accent (readable as text + buttons) */
+  --color-maple-400: #d97855;
+  --color-maple-500: #c05f3d;
+  --color-maple-600: #9e482c;
+  /* Restrained lemon accent — Amalfi Coast without loud gold */
+  --color-autumn-300: #e8d56a;
+  --color-autumn-400: #d4bc3a;
+  --color-tile-500: #c9a832;
+  --color-tile-600: #a38828;
+
+  /* Salerno aliases used by newer components */
+  --color-volcanic-50: #f5f3f0;
+  --color-volcanic-100: #e6e2dc;
+  --color-volcanic-500: #6a645f;
+  --color-volcanic-700: #3a3632;
+  --color-volcanic-800: #282522;
+  --color-volcanic-900: #181614;
+  --color-ionian-50: var(--color-coastal-50);
+  --color-ionian-100: var(--color-coastal-100);
+  --color-ionian-200: var(--color-coastal-200);
+  --color-ionian-400: var(--color-coastal-400);
+  --color-ionian-500: var(--color-coastal-500);
+  --color-ionian-600: var(--color-coastal-600);
+  --color-ionian-700: var(--color-coastal-700);
+  --color-ionian-800: var(--color-coastal-800);
+  --color-ionian-900: var(--color-coastal-900);
+  --color-citrus-300: var(--color-autumn-300);
+  --color-citrus-400: var(--color-autumn-400);
+  --color-citrus-500: var(--color-tile-500);
+  --color-citrus-600: var(--color-tile-600);
+  --color-citrus-700: #7a5f18;
+  --color-limestone-50: #fbf9f5;
+  --color-limestone-100: #f4efe6;
+  --color-limestone-200: #e8dfd2;
+  --color-limestone-300: #d6cab5;
+  --font-sans: var(--font-source-sans);
+  --font-display: var(--font-fraunces);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  @apply bg-white text-gray-800 antialiased;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  background-image:
+    radial-gradient(ellipse at 0% 0%, rgba(12, 34, 51, 0.04) 0%, transparent 45%),
+    radial-gradient(ellipse at 100% 20%, rgba(192, 95, 61, 0.03) 0%, transparent 40%);
+}
+
+h1, h2, h3, h4 { font-family: var(--font-display), Georgia, serif; }
+
+.section-padding { @apply px-4 py-16 sm:px-6 lg:px-8 lg:py-20; }
+.container-wide { @apply mx-auto max-w-7xl; }
+.section-eyebrow { @apply text-sm font-medium tracking-wide text-coastal-600 uppercase; letter-spacing: 0.08em; }
+.section-title { @apply font-display text-3xl font-semibold leading-tight text-gray-900 sm:text-4xl; }
+.section-subtitle { @apply mt-4 max-w-2xl text-base leading-relaxed text-gray-600 sm:text-lg; }
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-xl bg-coastal-800 px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-coastal-900 focus:outline-none focus:ring-2 focus:ring-coastal-500 focus:ring-offset-2;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center rounded-xl border border-coastal-200 bg-white px-6 py-3.5 text-sm font-semibold text-coastal-800 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-coastal-300 hover:bg-coastal-50 focus:outline-none focus:ring-2 focus:ring-coastal-500 focus:ring-offset-2;
+}
+
+.btn-accent {
+  @apply inline-flex items-center justify-center rounded-xl bg-maple-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-maple-400 focus:outline-none focus:ring-2 focus:ring-maple-400 focus:ring-offset-2;
+}
+
+.nav-card {
+  @apply relative block overflow-hidden rounded-2xl border border-gray-200/90 bg-white p-5 text-gray-900 shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:p-6;
+}
+
+.nav-card::before {
+  content: "";
+  @apply pointer-events-none absolute inset-x-0 top-0 z-0 h-1;
+  background: linear-gradient(90deg, #0c2233 0%, #1c4d6f 45%, #c05f3d 100%);
+}
+
+.nav-card > * { @apply relative z-[1]; }
+
+.card-editorial {
+  @apply overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-md transition-all duration-300 hover:shadow-lg;
+}
+
+.home-hero {
+  @apply relative overflow-hidden text-white pt-14 pb-16 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24;
+  min-height: 78vh;
+  display: flex;
+  align-items: flex-end;
+}
+
+.home-hero-heading {
+  @apply font-display text-4xl font-semibold leading-[1.06] sm:text-[2.75rem] lg:text-5xl max-w-4xl;
+}
+
+/* Mediterranean coastal mood — charcoal base with restrained lemon warmth */
+.hero-overlay {
+  @apply absolute inset-0;
+  background:
+    linear-gradient(180deg, rgba(10, 22, 34, 0.30) 0%, rgba(10, 22, 34, 0.55) 45%, rgba(8, 18, 28, 0.94) 100%),
+    linear-gradient(120deg, rgba(12, 34, 51, 0.68) 0%, rgba(58, 48, 38, 0.24) 55%, rgba(8, 18, 28, 0.7) 100%),
+    radial-gradient(ellipse at 78% 88%, rgba(192, 95, 61, 0.20) 0%, transparent 55%);
+}
+
+.card-feature {
+  @apply rounded-2xl border border-coastal-100 bg-gradient-to-br from-coastal-50/60 to-white p-6 sm:p-8;
+}
+
+.card-accent {
+  @apply rounded-2xl border border-forest-100 bg-gradient-to-br from-forest-50/80 to-white p-6 sm:p-8;
+}
+
+.footer-depth {
+  background: linear-gradient(180deg, #0c2233 0%, #081824 45%, #061018 100%);
+}
+
+.placeholder-widget {
+  @apply rounded-xl border-2 border-dashed border-coastal-200 bg-coastal-50/50 p-6 text-center;
+}
+
+.placeholder-widget-label {
+  @apply text-xs font-semibold uppercase tracking-wider text-coastal-600;
+}
+
+.pill {
+  @apply inline-flex items-center rounded-full bg-coastal-50 px-3 py-1 text-xs font-medium text-coastal-800;
+}
+
+.pill-accent {
+  @apply inline-flex items-center rounded-full bg-maple-500/10 px-3 py-1 text-xs font-medium text-maple-600;
+}
+
+/* Premium restrained Signature Tour badge — soft limestone, thin charcoal
+   border, small citrus-gold mark supplied by the badge component.
+   No loud gradient, no oversized gold. */
+.badge-signature {
+  @apply inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.1em];
+  border-color: rgba(16, 31, 43, 0.16);
+  background: #faf6ec;
+  color: #17303f;
+  box-shadow: 0 1px 2px rgba(16, 31, 43, 0.06);
+}
+
+/* Quieter secondary editorial badge */
+.badge-editors-choice {
+  @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[0.7rem] font-semibold uppercase tracking-[0.08em];
+  background: rgba(150, 69, 42, 0.10);
+  color: #96452a;
+}
+
+.badge-secondary {
+  @apply inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[0.7rem] font-semibold uppercase tracking-[0.08em];
+  border-color: rgba(16, 31, 43, 0.12);
+  background: #f4f6f7;
+  color: #24475d;
+}
+
+.card-signature {
+  @apply relative overflow-hidden rounded-2xl border bg-white transition-all duration-500;
+  border-color: rgba(201, 168, 50, 0.28);
+  background: linear-gradient(150deg, #fbf8f2 0%, #f5efe3 40%, #ffffff 100%);
+  box-shadow: 0 4px 24px rgba(12, 34, 51, 0.07);
+}
+
+.card-signature::before {
+  content: "";
+  @apply pointer-events-none absolute inset-x-0 top-0 h-1;
+  background: linear-gradient(90deg, #0c2233 0%, #1c4d6f 50%, #c9a832 100%);
+}
+
+.card-signature:hover {
+  box-shadow:
+    0 8px 32px rgba(12, 34, 51, 0.12),
+    0 0 0 1px rgba(201, 168, 50, 0.18);
+  transform: translateY(-2px);
+}
+
+.section-signature-hero {
+  @apply relative overflow-hidden text-white;
+  background: linear-gradient(135deg, #081824 0%, #123248 42%, #1c4d6f 100%);
+}
+
+.section-signature-hero::after {
+  content: "";
+  @apply pointer-events-none absolute inset-0;
+  background: radial-gradient(ellipse at 82% 18%, rgba(201, 168, 50, 0.14), transparent 52%);
+}
+
+.prose-body p { @apply mt-4 text-base leading-relaxed text-gray-700; }
+.prose-body h2 { @apply mt-10 font-display text-2xl font-semibold text-gray-900; }
+.prose-body h3 { @apply mt-6 font-display text-xl font-semibold text-gray-900; }
+.prose-body ul { @apply mt-4 list-disc space-y-2 pl-5 text-gray-700; }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s ease-out both;
+}
+
+.animate-fade-up-delay {
+  animation: fade-up 0.7s ease-out 0.15s both;
+}
+
+.animate-fade-up-delay-2 {
+  animation: fade-up 0.7s ease-out 0.3s both;
+}
