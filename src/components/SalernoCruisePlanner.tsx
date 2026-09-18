@@ -1,18 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { jsPDF } from "jspdf";
-import {
-  travellerRecommendations,
-} from "@/data/recommendations";
+import type { ScheduleEntry } from "@/data/types";
+import { travellerRecommendations } from "@/data/recommendations";
 import { signatureTourDisclosures } from "@/data/signature-tours";
+import { getScheduleEntries } from "@/data/schedules";
+import { getEntriesForDate } from "@/lib/schedule-utils";
 
 /**
- * Salerno cruise planner driven by editorial recommendations.
+ * Salerno cruise planner with schedule-driven ship selection.
  *
- * Editorial integrity over commercial bias: recommendations follow the
- * passenger's hours ashore, interests and mobility — not commercial tier alone.
+ * Editorial integrity over commercial bias: recommendations are driven by the
+ * passenger's hours ashore (from actual arrival/departure only), interests and
+ * mobility — NOT by which product earns us more.
  */
 
 interface PlannerLink {
@@ -47,8 +49,8 @@ type Budget = "budget" | "mid" | "premium";
 type TravelStyle = "diy" | "guided";
 
 interface PlannerInput {
-  arrivalTime: string;
-  departureTime: string;
+  arrivalTime?: string;
+  departureTime?: string;
   adults: number;
   children: number;
   interests: string[];
@@ -253,11 +255,26 @@ const DAY_PLANS: Record<
   },
 };
 
-function usableHours(input: PlannerInput): number {
-  if (!input.arrivalTime || !input.departureTime) return 8;
-  const [ah, am] = input.arrivalTime.split(":").map(Number);
-  const [dh, dm] = input.departureTime.split(":").map(Number);
-  const elapsed = dh * 60 + dm - ah * 60 - am;
+/** Real published or manually entered HH:MM — rejects empty / midnight placeholders. */
+function realScheduleTime(value: string | undefined): string {
+  const v = (value || "").trim();
+  if (!v || v === "00:00" || v === "0:00") return "";
+  return v;
+}
+
+/**
+ * Usable hours ashore are derived only from actual arrival and departure times
+ * (minus a 1.5h buffer for disembarkation and return). No invented defaults.
+ */
+function usableHoursFromTimes(arrivalTime?: string, departureTime?: string): number | null {
+  const arrival = realScheduleTime(arrivalTime);
+  const departure = realScheduleTime(departureTime);
+  if (!arrival || !departure) return null;
+  const [ah, am] = arrival.split(":").map(Number);
+  const [dh, dm] = departure.split(":").map(Number);
+  if ([ah, am, dh, dm].some((n) => Number.isNaN(n))) return null;
+  const elapsed = dh * 60 + dm - (ah * 60 + am);
+  if (elapsed <= 0) return null;
   return Math.max(0, elapsed / 60 - 1.5);
 }
 
@@ -314,7 +331,29 @@ function recommendationLinks(ids: string[]): PlannerLink[] {
 }
 
 function generateSalernoPlan(input: PlannerInput): PlannerResult {
-  const hours = usableHours(input);
+  const hours = usableHoursFromTimes(input.arrivalTime, input.departureTime);
+  if (hours === null) {
+    return {
+      headline: "Add your Salerno arrival and departure times",
+      summary:
+        "Usable hours ashore are calculated only from your ship's published or confirmed arrival and departure times. Select a scheduled ship call, or enter times manually, then build your plan again.",
+      excursions: [],
+      logistics: [
+        {
+          label: "Salerno Ship Schedules",
+          href: "/ship-schedules/salerno",
+          why: "Find your call date and pre-fill published Salerno times.",
+        },
+        {
+          label: "Salerno cruise port guide",
+          href: "/salerno-cruise-port-guide/",
+          why: "Berths, walking routes and regional transfer context.",
+        },
+      ],
+      dayPlan: [],
+    };
+  }
+
   const key = selectPlan(input, hours);
   const plan = DAY_PLANS[key];
   const partySize = input.adults + input.children;
@@ -348,6 +387,11 @@ function generateSalernoPlan(input: PlannerInput): PlannerResult {
     note,
     excursions,
     logistics: [
+      {
+        label: "Salerno Ship Schedules",
+        href: "/ship-schedules/salerno",
+        why: "See which ships share your Salerno port day.",
+      },
       {
         label: "Salerno cruise port guide",
         href: "/salerno-cruise-port-guide/",
@@ -394,8 +438,14 @@ function Section({ title, links }: { title: string; links: PlannerLink[] }) {
 }
 
 export function SalernoCruisePlanner() {
-  const [arrivalTime, setArrivalTime] = useState("08:00");
-  const [departureTime, setDepartureTime] = useState("18:00");
+  const schedule = useMemo(() => getScheduleEntries("salerno"), []);
+  const dates = useMemo(() => [...new Set(schedule.map((e) => e.date))].sort(), [schedule]);
+
+  const [callDate, setCallDate] = useState("");
+  const [shipName, setShipName] = useState("");
+  const [manualTimes, setManualTimes] = useState(false);
+  const [arrivalTime, setArrivalTime] = useState("");
+  const [departureTime, setDepartureTime] = useState("");
   const [adults, setAdults] = useState("2");
   const [children, setChildren] = useState("0");
   const [interests, setInterests] = useState<string[]>(["pompeii", "amalfi"]);
@@ -404,6 +454,60 @@ export function SalernoCruisePlanner() {
   const [travelStyle, setTravelStyle] = useState<TravelStyle>("guided");
   const [plan, setPlan] = useState<PlannerResult | null>(null);
 
+  const shipsOnDate: ScheduleEntry[] = useMemo(() => {
+    if (!callDate) return [];
+    return getEntriesForDate(schedule, callDate);
+  }, [schedule, callDate]);
+
+  function applyShipSelection(date: string, ship: string) {
+    setCallDate(date);
+    setShipName(ship);
+    const matches = getEntriesForDate(schedule, date).filter((e) => e.ship === ship);
+    if (matches.length === 1) {
+      const a = realScheduleTime(matches[0].arrival);
+      const d = realScheduleTime(matches[0].departure);
+      setArrivalTime(a);
+      setDepartureTime(d);
+      setManualTimes(!(a && d));
+    } else if (matches.length > 1) {
+      setArrivalTime("");
+      setDepartureTime("");
+      setManualTimes(true);
+    } else {
+      setArrivalTime("");
+      setDepartureTime("");
+      setManualTimes(true);
+    }
+  }
+
+  function onDateChange(date: string) {
+    setCallDate(date);
+    setShipName("");
+    setArrivalTime("");
+    setDepartureTime("");
+    setPlan(null);
+    const matches = date ? getEntriesForDate(schedule, date) : [];
+    if (matches.length === 1) {
+      applyShipSelection(date, matches[0].ship);
+    } else if (matches.length === 0) {
+      setManualTimes(true);
+    } else {
+      setManualTimes(false);
+    }
+  }
+
+  function onShipChange(ship: string) {
+    if (!callDate) return;
+    if (!ship) {
+      setShipName("");
+      setArrivalTime("");
+      setDepartureTime("");
+      setManualTimes(true);
+      return;
+    }
+    applyShipSelection(callDate, ship);
+  }
+
   function toggleInterest(id: string) {
     setInterests((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   }
@@ -411,8 +515,8 @@ export function SalernoCruisePlanner() {
   function generate() {
     setPlan(
       generateSalernoPlan({
-        arrivalTime,
-        departureTime,
+        arrivalTime: realScheduleTime(arrivalTime),
+        departureTime: realScheduleTime(departureTime),
         adults: Number(adults) || 1,
         children: Number(children) || 0,
         interests,
@@ -462,15 +566,71 @@ export function SalernoCruisePlanner() {
     doc.save("salerno-cruise-plan.pdf");
   }
 
+  const noMatch = Boolean(callDate) && shipsOnDate.length === 0;
+  const hasTimes = Boolean(realScheduleTime(arrivalTime) && realScheduleTime(departureTime));
+
   return (
     <div className="card-feature">
       <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">Port call date</label>
+          <input
+            type="date"
+            value={callDate}
+            onChange={(e) => onDateChange(e.target.value)}
+            list="salerno-call-dates"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+          />
+          <datalist id="salerno-call-dates">
+            {dates.map((d) => (
+              <option key={d} value={d} />
+            ))}
+          </datalist>
+        </div>
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">Ship</label>
+          <select
+            value={shipName}
+            onChange={(e) => onShipChange(e.target.value)}
+            disabled={!callDate || shipsOnDate.length === 0}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm disabled:bg-gray-50"
+          >
+            <option value="">
+              {!callDate
+                ? "Choose a date first"
+                : shipsOnDate.length === 0
+                  ? "No published match — enter times manually"
+                  : shipsOnDate.length === 1
+                    ? shipsOnDate[0].ship
+                    : "Choose your ship"}
+            </option>
+            {shipsOnDate.map((e) => (
+              <option key={`${e.date}-${e.ship}-${e.cruiseLine}`} value={e.ship}>
+                {e.ship} ({e.cruiseLine})
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {(manualTimes || noMatch || !callDate) && (
+          <div className="rounded-lg border border-amber-100 bg-amber-50/80 px-3 py-2 text-xs text-amber-950 sm:col-span-2">
+            {noMatch
+              ? "No published Salerno ship for that date — enter arrival and departure manually."
+              : manualTimes && shipName
+                ? "Published times are incomplete for this Salerno call — enter times manually or confirm with your cruise line."
+                : "Select your Salerno call date and ship to pre-fill published times, or enter times manually. Hours ashore are calculated only from actual arrival and departure."}
+          </div>
+        )}
+
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">Arrival time (local)</label>
           <input
             type="time"
             value={arrivalTime}
-            onChange={(e) => setArrivalTime(e.target.value)}
+            onChange={(e) => {
+              setArrivalTime(e.target.value);
+              setManualTimes(true);
+            }}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
           />
         </div>
@@ -481,7 +641,10 @@ export function SalernoCruisePlanner() {
           <input
             type="time"
             value={departureTime}
-            onChange={(e) => setDepartureTime(e.target.value)}
+            onChange={(e) => {
+              setDepartureTime(e.target.value);
+              setManualTimes(true);
+            }}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
           />
         </div>
@@ -564,7 +727,7 @@ export function SalernoCruisePlanner() {
         </div>
       </div>
       <div className="mt-6 flex flex-wrap gap-3">
-        <button type="button" onClick={generate} className="btn-primary">
+        <button type="button" onClick={generate} className="btn-primary" disabled={!hasTimes}>
           Build my Salerno plan
         </button>
         {plan && (
@@ -573,6 +736,12 @@ export function SalernoCruisePlanner() {
           </button>
         )}
       </div>
+      {!hasTimes && (
+        <p className="mt-3 text-xs text-gray-500">
+          Enter arrival and departure times (from the schedule or manually) before building a plan.
+          Hours ashore are never estimated from defaults.
+        </p>
+      )}
 
       {plan && (
         <div className="mt-8 space-y-8">
@@ -590,27 +759,30 @@ export function SalernoCruisePlanner() {
           </div>
           <Section title="Recommended shore excursions" links={plan.excursions} />
           <Section title="Keep planning" links={plan.logistics} />
-          <section>
-            <h3 className="section-title mb-4 text-xl">Your day plan</h3>
-            <ol className="relative space-y-4 border-l border-coastal-200 pl-6">
-              {plan.dayPlan.map((s, i) => (
-                <li key={i} className="relative">
-                  <span
-                    className="absolute -left-[27px] top-1 h-3 w-3 rounded-full bg-coastal-600"
-                    aria-hidden="true"
-                  />
-                  <p className="text-xs font-semibold uppercase tracking-wide text-coastal-700">
-                    {s.time}
-                  </p>
-                  <p className="mt-1 text-sm text-gray-700">{s.text}</p>
-                </li>
-              ))}
-            </ol>
-          </section>
+          {plan.dayPlan.length > 0 && (
+            <section>
+              <h3 className="section-title mb-4 text-xl">Your day plan</h3>
+              <ol className="relative space-y-4 border-l border-coastal-200 pl-6">
+                {plan.dayPlan.map((s, i) => (
+                  <li key={i} className="relative">
+                    <span
+                      className="absolute -left-[27px] top-1 h-3 w-3 rounded-full bg-coastal-600"
+                      aria-hidden="true"
+                    />
+                    <p className="text-xs font-semibold uppercase tracking-wide text-coastal-700">
+                      {s.time}
+                    </p>
+                    <p className="mt-1 text-sm text-gray-700">{s.text}</p>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          )}
           <p className="text-xs text-gray-500">
             Guidance is indicative — always confirm your ship&apos;s all-aboard time and build a
             60–90 minute return buffer. Amalfi Coast traffic, Vesuvius walking demands and Paestum
-            driving can lengthen journey times materially.
+            driving can lengthen journey times materially. This planner is for Salerno port calls
+            only — not Naples or Sorrento.
           </p>
         </div>
       )}

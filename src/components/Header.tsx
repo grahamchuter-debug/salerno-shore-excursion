@@ -10,6 +10,7 @@ const navItems = [
   { href: "/signature-tours", label: "Signature Tours" },
   { href: "/best-salerno-shore-excursions", label: "Compare" },
   { href: "/salerno-cruise-port-guide", label: "Port Guide" },
+  { href: "/ship-schedules", label: "Schedules" },
   { href: "/cruise-planner", label: "Planner" },
   { href: "/pompeii-from-salerno-cruise-port", label: "Guides" },
 ];

@@ -12,7 +12,7 @@ const explore = [
 
 const plan = [
   { href: "/salerno-cruise-port-guide", label: "Port guide" },
-  { href: "/salerno-cruise-schedule", label: "Cruise schedule" },
+  { href: "/ship-schedules", label: "Ship schedules" },
   { href: "/cruise-planner", label: "Cruise planner" },
   { href: "/getting-around-salerno-from-the-cruise-port", label: "Getting around" },
 ];
